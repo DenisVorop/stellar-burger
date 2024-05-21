@@ -1,11 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { v4 as uuidv4 } from 'uuid';
 
 import { TIngredient, TOrder } from '../../utils/types';
 import { orderBurger } from '../actions';
 
 interface constructorState {
     bun: TIngredient | null;
-    ingredients: TIngredient[];
+    ingredients: (TIngredient & { id: string })[];
     orderRequest: boolean;
     order: TOrder | null;
 }
@@ -26,7 +27,9 @@ const constructorSlice = createSlice({
     initialState,
     reducers: (create) => ({
         addIngredient: create.reducer<TIngredient>((state, action) => {
-            const newIngredient = action.payload;
+            const id = uuidv4();
+
+            const newIngredient = { id, ...action.payload };
 
             if (newIngredient.type === 'bun') {
                 state.bun = newIngredient;
