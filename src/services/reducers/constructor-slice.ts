@@ -1,23 +1,23 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { v4 as uuidv4 } from 'uuid';
 
 import { TIngredient, TOrder } from '../../utils/types';
 import { orderBurger } from '../actions';
 
-interface constructorState {
+interface ConstructorState {
     bun: TIngredient | null;
     ingredients: (TIngredient & { id: string })[];
     orderRequest: boolean;
     order: TOrder | null;
 }
-const initialState: constructorState = {
+const initialState: ConstructorState = {
     bun: null,
     ingredients: [],
     orderRequest: false,
     order: null,
 };
 
-type movedIndex = {
+type MovedIndex = {
     index: number;
     newIndex: number;
 };
@@ -26,21 +26,25 @@ const constructorSlice = createSlice({
     name: 'constructor',
     initialState,
     reducers: (create) => ({
-        addIngredient: create.reducer<TIngredient>((state, action) => {
-            const id = uuidv4();
+        addIngredient: create.preparedReducer(
+            (payload: TIngredient) => {
+                const id = uuidv4();
+                return { payload: { id, ...payload } };
+            },
+            (state, action: PayloadAction<TIngredient & { id: string }>) => {
+                const newIngredient = action.payload;
 
-            const newIngredient = { id, ...action.payload };
-
-            if (newIngredient.type === 'bun') {
-                state.bun = newIngredient;
-            } else {
-                state.ingredients.push(newIngredient);
-            }
-        }),
+                if (newIngredient.type === 'bun') {
+                    state.bun = newIngredient;
+                } else {
+                    state.ingredients.push(newIngredient);
+                }
+            },
+        ),
         removeIngredient: create.reducer<string>((state, action) => {
             state.ingredients = state.ingredients.filter((ingredient) => ingredient._id !== action.payload);
         }),
-        moveIngredient: create.reducer<movedIndex>((state, action) => {
+        moveIngredient: create.reducer<MovedIndex>((state, action) => {
             const { index, newIndex } = action.payload;
             const movedIngredient = state.ingredients[index];
             state.ingredients.splice(index, 1);

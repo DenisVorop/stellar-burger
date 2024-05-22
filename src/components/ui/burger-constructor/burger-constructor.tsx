@@ -1,9 +1,9 @@
 import { FC } from 'react';
 import { Button, ConstructorElement, CurrencyIcon } from '@zlden/react-developer-burger-ui-components';
 
+import { BurgerConstructorElement } from '../../../components/burger-constructor-element';
 import { Modal } from '../../../components/modal';
 import { TIngredient } from '../../../utils/types';
-import { BurgerConstructorElementUI } from '../burger-constructor-element';
 import { Preloader } from '../preloader';
 import { OrderDetailsUI } from '../order-details';
 
@@ -37,14 +37,11 @@ export const BurgerConstructorUI: FC<BurgerConstructorUIProps> = ({
         <ul className={styles.elements}>
             {constructorItems.ingredients?.length > 0 ? (
                 constructorItems.ingredients.map((item: TIngredient & { id: string }, index: number) => (
-                    <BurgerConstructorElementUI
+                    <BurgerConstructorElement
                         ingredient={item}
                         index={index}
                         totalItems={constructorItems.ingredients.length}
                         key={item.id}
-                        handleMoveUp={() => {}}
-                        handleMoveDown={() => {}}
-                        handleClose={() => {}}
                     />
                 ))
             ) : (
