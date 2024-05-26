@@ -1,4 +1,17 @@
 import { FC } from 'react';
-import { AppHeaderUI } from '@ui';
+import { Outlet } from 'react-router-dom';
 
-export const AppHeader: FC = () => <AppHeaderUI userName='' />;
+import { getUserName } from '../../services/selectors';
+import { AppHeaderUI } from '../../components/ui';
+import { useSelector } from '../../services/store';
+
+export const AppHeader: FC = () => {
+    const userName = useSelector(getUserName);
+
+    return (
+        <>
+            <AppHeaderUI userName={userName} />
+            <Outlet />
+        </>
+    );
+};
