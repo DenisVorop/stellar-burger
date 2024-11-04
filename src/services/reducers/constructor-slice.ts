@@ -1,5 +1,4 @@
-import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { v4 as uuidv4 } from 'uuid';
+import { PayloadAction, createSlice, nanoid } from '@reduxjs/toolkit';
 
 import { TIngredient, TOrder } from '../../utils/types';
 import { orderBurger } from '../actions';
@@ -28,7 +27,7 @@ const constructorSlice = createSlice({
     reducers: (create) => ({
         addIngredient: create.preparedReducer(
             (payload: TIngredient) => {
-                const id = uuidv4();
+                const id = nanoid();
                 return { payload: { id, ...payload } };
             },
             (state, action: PayloadAction<TIngredient & { id: string }>) => {
